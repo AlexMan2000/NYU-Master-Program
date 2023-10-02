@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 plt.close("all")
 np.random.seed(2017)
 
+
 def p_longest_streak(n, tries):
     # Write your Monte Carlo code here, n is the length of the sequence and tries is the number
     # of sampled sequences used to produce the estimate of the probability
@@ -21,26 +22,18 @@ def p_longest_streak(n, tries):
 
 
 def longest_streaks_number(seq):
-    # Compute the longest streak in a seq lsit
-    max_num = float('-inf')
-    slow = -1
-    fast = 0
-    curr = 0
-    if seq[fast] == 1: curr = 1; max_num = max(curr,max_num)
-    while fast < len(seq):
-        if slow != -1:
-            if seq[fast] == seq[slow] == 1:
-                curr += 1
-                max_num = max(curr, max_num)
-            else:
-                if seq[fast] == 1:
-                    curr = 1
-                else:
-                    curr = 0
-                max_num = max(curr, max_num)
-        slow+=1
-        fast+=1
-    return max_num
+    # Compute the longest streak in a seq list
+    longest = 0
+    current_streak = 0
+
+    for flip in seq:
+        if flip == 1:
+            current_streak += 1
+            longest = max(longest, current_streak)
+        else:
+            current_streak = 0
+
+    return longest
 
 
 
@@ -64,9 +57,6 @@ for ind_n in range(len(n_vals)):
 
 plt.show()
 
-print("The probability that the longest streak of ones in a Bernoulli iid sequence of length 200 has length 8 or more is ")
-print() # Compute the probability and print it here
-
 if __name__ == "__main__":
-    # print(longest_streaks_number([0,0,0,0]))
-    print(p_longest_streak(5, 1000))
+    print("The probability that the longest streak of ones in a Bernoulli iid sequence of length 200 has length 8 or more is ")
+    print(p_longest_streak(200, 1000)) # Compute the probability and print it here
