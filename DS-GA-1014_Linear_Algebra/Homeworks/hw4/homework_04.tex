@@ -1,0 +1,95 @@
+\documentclass[11pt,nocut]{article}
+
+\usepackage{packages}
+\usepackage{notations}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{1pt}
+\fancyhead[R]{DS-GA 1014 - Fall 2023}
+\fancyhead[L]{HW4 - Norms and Inner Products - due October 8, 2021 at noon}
+
+\setcounter{section}{4}
+
+\begin{document}
+
+\input{preamble_homeworks.tex}
+
+\bigskip
+
+\begin{problem}[2.5 points]
+Given $x\in\R^n$, define 
+$$
+N(x) := \max\{|x_1|,|x_2|,...,|x_n|\}. 
+$$
+\begin{itemize}
+    \item[(a)] Show that this defines a valid norm, i.e., verify that $N(\cdot)$ satisfies the three norm properties. 
+    \item[(b)] Let $x = (10,0)$ and $y = (9,9)$. Using the norm $N(\cdot)$, which of $x$ and $y$ has bigger norm? Using the Euclidean norm, which of $x$ and $y$ has bigger norm?
+    \item[(c)] Show that $N(x) > 1$ implies the Euclidean norm of $x$ is also greater than 1, i.e., $\|x\|_2 > 1$. 
+\end{itemize}
+    
+\end{problem}
+
+\vspace{1mm}
+
+\begin{problem}[2 points] 
+Decide whether each of the following functions $N(\cdot)$ is a valid norm. If yes, you do not have to justify your answer. If no, then provide an explicit counterexample and state which norm property is violated. 
+\begin{itemize}
+    \item [(a)] $x\in\R^2$. $N(x) := x^\top A x$, where $A = \begin{bmatrix}
+        2 & 0 \\ 0 & 1
+    \end{bmatrix}\in\R^{2\times 2}$. 
+    \item[(b)]  $x\in\R^2$. $N(x) := x^\top A x$, where $A = \begin{bmatrix}
+        2 & 0 \\ 0 & -1
+    \end{bmatrix}\in\R^{2\times 2}$. 
+    \item[(c)] $x\in\R^3$. $N(x) := 2|x_1| + \max\{|x_2|,|x_3|\}$. 
+    \item[(d)] $x\in\R^n$. $N(x) := \left(\prod_{i=1}^n |x_i|\right)^{1/n} + \max_{i\in [n]}\{|x_i|\}$. 
+\end{itemize}
+\end{problem}
+
+\vspace{1mm} 
+
+\begin{problem}[1 point]
+    Show that for any vector $x \in \R^n$, $$\displaystyle \left(\sum_{k=1}^n x_k \right)^2 \leq n \sum_{k = 1}^n x_k^2.$$ 
+Hint: use Cauchy-Schwarz. 
+\end{problem}
+
+\vspace{1mm}
+
+\begin{problem}[1.5 points]
+Consider the set $V$ of random variables (on a probability space $\Omega$) with a finite second moment (i.e., for $X\in V$, $\E[X^2]<\infty$), with the inner product $\langle X,Y \rangle = \E[XY]$. Prove the Cauchy-Schwarz inequality: 
+$$
+|\E[XY]| \le \sqrt{\E[X^2]\E[Y^2]}.   
+$$
+Hint: given constants $a,b \ge 0$, evaluate the expression $\E[(aX-bY)^2]$. Then find appropriate values of $a,b$ to prove the statement. 
+\end{problem}
+    
+
+\begin{problem}[3 points]
+    Let $S$ be a subspace of $\R^n$ with $x \mapsto P_S(x)$ the orthogonal projector of all $x \in \R^n$. We will use the Euclidean dot product as our inner product $\langle x, y\rangle = \sum_{i=1}^n x_i y_i$. Show that for any $x \in \R^n$, 
+    \begin{enumerate}[label=\normalfont(\textbf{\alph*})]
+        \item $\langle x, y\rangle = \langle P_S(x), y\rangle$, for any vector $y$ in $S$. 
+        \item $x - P_S(x)$ is orthogonal to $S$,
+        \item $\lVert P_S(x) \rVert \leq \lVert x \rVert$, and the equality holds when $x\in S$.
+    \end{enumerate}  
+Hint: express $y$ in terms of the orthonormal basis of $S$: $(v_1, v_2, ..., v_k)$. 
+\end{problem}
+
+
+\vspace{1mm}
+
+\begin{problem}[$\star$] 
+Given $x\in\R^n$ and $p\in (1,\infty)$, define the $\ell_p$-norm as 
+$$\|x\|_p := \left(\sum_{i=1}^n |x_i|^p\right)^{1/p}.$$
+Prove that the $\ell_p$-norm satisfies the triangle inequality, that is, for any $x,y\in\R^n$, show that
+$$
+\|x + y \|_p \le \|x\|_p + \|y\|_p. 
+$$
+You may use the following inequality, known as Hölder's inequality, without proof: 
+for any $x,y\in\R^n$, and constants $p,q\in\R_+$ satisfying $\frac{1}{p} + \frac{1}{q}=1$, we have
+$$
+\sum_{i=1}^n |x_i y_i| \le \|x\|_p\|y\|_q. 
+$$
+\end{problem}
+
+
+\end{document}
