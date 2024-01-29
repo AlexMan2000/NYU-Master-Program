@@ -1,0 +1,65 @@
+\documentclass[12pt,twoside]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,graphicx,amsmath,amsfonts,amscd,amssymb,bm,cite,epsfig,epsf,url}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{amsthm,multirow,wasysym,appendix}
+\usepackage{array,subcaption} 
+% \usepackage[small,bf]{caption}
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usetikzlibrary{spy}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows,automata}
+\usepackage{thmtools}
+\usepackage{blkarray} 
+\usepackage{textcomp}
+\usepackage[left=0.8in,right=1.0in,top=1.0in,bottom=1.0in]{geometry}
+
+\input{macros}
+
+\begin{document}
+
+\begin{center}
+{\large{\textbf{Homework 1}} } \vspace{0.2cm}\\
+Due Feb 4 at 11 pm
+\\
+\end{center}
+\input{hwstatement.tex}\\
+
+\begin{enumerate}
+
+\item (Dunning-Kruger effect) The Dunning-Kruger effect is a hypothesized cognitive bias; the claim is that people who are less competent tend to overestimate their ability relative to more competent people. However, recent studies suggest that this effect might arise due to statistical artifacts. This exercise illustrates how easily this can occur, if one is not careful. Consider a study that measures true competence, represented by a random variable $\rnd{t}$ with zero mean and unit variance, and self-evaluated competence, represented by another random variable $\rnd{s}$ with zero mean and unit variance. The investigators are interested in the correlation between the true competence $\rnd{t}$ and the difference between self-evaluated and true competence $\rnd{d}:=\rnd{s} - \rnd{t}$. Their hypothesis is that they should be negatively correlated, because less competent people overestimate their competence. However, suppose it is the case that the true competence $\rnd{t}$ and the self-evaluated competence $\rnd{s}$ are completely uncorrelated. Compute the correlation coefficient between $\rnd{t}$ and $\rnd{d}$ under this assumption. What do you make of this?
+
+\item (Three random variables) If a random variable $\rnd{w}$ is positively correlated with another random variable $\rnd{y}$, and $\rnd{y}$ is positively correlated with a third random variable $\rnd{z}$, can $\rnd{w}$ and $\rnd{z}$ be negatively correlated? If no, prove it. If yes,
+\begin{enumerate} 
+\item provide an example of three such random variables;
+\item provide a small sample of data with three variables such that the three sample correlations have this property. Compute and provide the data and the sample correlation matrix of your data.
+\end{enumerate}
+
+\item (Averaging noisy data) We want to approximate a signal represented by a zero-mean random variable $\rx$ with unit variance. We have access to $n$ measurements $\ry_1$, $\ry_2$, \ldots, $\ry_n$, where $\ry_i := \rx + \rz_i$ for $1\leq i \leq n$. Each $\rz_i$ is a zero-mean random variable with variance $\sigma^2$. The random variables $\rx$, $\rz_1$, $\rz_2$, \ldots, $\rz_n$ are all mutually independent. We decide to approximate $\rx$ by scaling the sum of all measurements: the estimator is $\alpha \sum_{i=1}^{n}\ry_i$ for some $\alpha \in \R$.
+\begin{enumerate} 
+\item What value of $\alpha$ minimizes the mean squared error? 
+\item What does the estimator tend to as $\sigma^2 \rightarrow 0$ and $\sigma^2 \rightarrow \infty$? 
+\item What is the mean squared error of the estimator? How does it scale with $n$?
+\end{enumerate}
+
+\item (Interference) We model a signal of interest as a random variable $\ra$ with mean $\mu$ and variance $\sigma^2$, which is known to be nonnegative. The signal cannot be observed directly. The available measurement is modeled as a random variable $\ry$ which equals $\rnd{w}\ra$, where $\rnd{w}$ is an interfering signal that is equal to -1 with probability 1/2 and 1 with probability 1/2. We assume that  $\rnd{w}$ and $\ra$ are independent.
+\begin{enumerate} 
+\item What is the linear MMSE estimator of $\ra$ given $\ry=y$? 
+\item What is the MSE of the linear MMSE estimator? 
+\item Propose a nonlinear estimator that has a better MSE than the linear MMSE.
+\end{enumerate}
+
+\item (Temperature) The table in \texttt{tempature.csv} includes the average temperatures of each month at different locations (longitude and latitude). 
+
+\begin{enumerate}
+	\item Plot scatterplots of the latitude and temperature data and compute the correlation separately for January and July. What do you find?
+	\item Compute the correlation between latitude and temperature in July for the locations in the southern hemisphere (latitude $< 0$). Plot scatterplots and the linear MMSE estimator and corresponding residuals.
+	\item Repeat the experiment for locations in the northern hemisphere (latitude $> 0$) in January. Explain your findings.
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}
