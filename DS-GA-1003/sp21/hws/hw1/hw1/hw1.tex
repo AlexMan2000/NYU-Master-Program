@@ -1,0 +1,130 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{minted}
+\input{math_commands}
+
+\newcommand{\bb}{b}
+
+\pagestyle{empty} \addtolength{\textwidth}{1.0in}
+\addtolength{\textheight}{0.5in} \addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{0.5in}
+\newcommand{\ruleskip}{\bigskip\hrule\bigskip}
+\newcommand{\nodify}[1]{{\sc #1}} \newcommand{\points}[1]{{\textbf{[#1
+points]}}}
+
+\newcommand{\bitem}{\begin{list}{$\bullet$}%
+{\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}%
+\setlength{\rightmargin}{0pt}}} \newcommand{\eitem}{\end{list}}
+
+\definecolor{nyupurple}{RGB}{134, 0, 179}
+\setlength{\parindent}{0pt} \setlength{\parskip}{0.5ex}
+
+\begin{document}
+
+\pagestyle{myheadings} \markboth{}{\color{nyupurple} DS-GA-1003 - Spring 2021}
+
+\begin{center}
+{\Large
+Homework 1: Error Decomposition \& Polynomial Regression
+} 
+\end{center}
+
+{
+{ \color{nyupurple} \textbf{Due:} Wednesday, February 10, 2020 at 11:59pm} 
+} 
+
+\textbf{Instructions: }Your answers to the questions below, including plots and mathematical
+ work, should be submitted as a single PDF file.  It's preferred that you write your answers using software that typesets mathematics (e.g.LaTeX, LyX, or MathJax via iPython), though if you need to you may scan handwritten work.  You may find the \href{https://github.com/gpoore/minted}{minted} package convenient for including source code in your LaTeX document.  If you are using LyX, then the \href{https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings}{listings} package tends to work better. The last application is optional.
+
+ \ruleskip
+
+\textbf{\color{nyupurple} General considerations}
+
+For the first part of this assignment we will consider a synthetic prediction problem to develop our intuition about the error decomposition. Consider the random variables $x \in \mathcal{X} = [0,1]$ distributed uniformely ($ x \sim \mathrm{Unif}([0,1])$) and $y \in \mathcal{Y} = \sR$ defined as a polynomial of degree 2 of $x$: there exists $(a_0, a_1, a_2) \in \sR^3$ such that the values of $x$ and $y$ are linked as $y = g(x) = a_0 + a_1 x + a_2 x^2$. Note that this relation fixes the joint distribution $P_{\mathcal{X} \times \mathcal{Y}}$.
+
+From the knowledge of a sample $\{x_i, y_i\}_{i=1}^N$, we would like to predict the relation between $x$ and $y$, that is find a function $f$ to make predictions $\hat{y} = f(x)$. We note $\gH_d$, the set of polynomial functions on $\R$ of degree $d$: $\gH_d = \left\{f: x \rightarrow \bb_0 + \bb x + \cdots \bb_d x^d; \bb_k \in \sR \forall k\in \{0, \cdots d\} \right\}$. We will consider the hypothesis classes $\gH_d$ varying d.
+We will minimize the squared loss $\ell(\hat{y},y) = \frac 1 2 (\hat{y} - y)^2$ to solve the regression problem.
+
+\newcounter{saveenum}
+\begin{enumerate}
+    \item Recall the definition of the expected risk $R(f)$ of a predictor $f$. While this cannot be computed in general note that here we defined $P_{\mathcal{X} \times \mathcal{Y}}$. Which function $f^*$ is an obvious Bayes predictor? Make sure to explain why the risk $R(f^*)$ is minimum at $f^*$.
+
+    \item Using $\gH_2$ as your hypothesis class, which function $f^*_{\gH_2}$ is a risk minimizer in $\gH_2$? Recall the definition of the approximation error. What is the approximation error achieved by $f^*_{\gH_2}$ ?
+
+
+    \item Considering now $\gH_d$, with $d>2$. Justify an inequality between $R(f^*_{\gH_2})$ and $R(f^*_{\gH_d})$. Which function $f^*_{\gH_d}$ is a risk minimizer in $\gH_d$? What is the approximation error achieved by $f^*_{\gH_d}$?
+
+    
+    \item For this question we assume $a_0 = 0$. Considering $\gH= \left\{f: x \rightarrow \bb_1 x;  \bb_1 \in \sR\right\}$, which function $f^*_{\gH}$ is a risk minimizer in $\gH$? What is the approximation error achieved by $f^*_{\gH}$? In particular what is the approximation error achieved if furthermore $a_2=0$ in the definition of true underlying relation $g(x)$ above?
+
+\setcounter{saveenum}{\value{enumi}}
+\end{enumerate}
+
+\textbf{\color{nyupurple} Polynomial regression as linear least squares}\\
+In practice, $P_{\mathcal{X} \times \mathcal{Y}}$ is usually unknown and we use the empirical risk minimizer (ERM). We will reformulate the problem as a $d$-dimensional linear regression problem. 
+First note that functions in $\gH_d$ are parametrized by a vector $\bs \bb = [\bb_0, \bb_1, \cdots \bb_d]^\top$, we will use the notation $f_{\bs \bb}$. Similarly we will note $\bs a \in \sR^3$ the vector parametrizing $g(x) = f_{\bs a}(x)$. We will also gather data points from the training sample in the following matrix and vector:
+\begin{align}
+    X = \left[\begin{matrix}
+    1 & x_1 & \cdots & x_1^d \\
+    1 & x_2 & \cdots & x_2^d \\
+    \vdots & \vdots & \vdots & \vdots \\
+    1 & x_N & \cdots & x_N
+\end{matrix} \right], \quad 
+\bs y = [y_0, y_1, \cdots y_N]^\top.
+\end{align}
+These notations allow us to take advantage of the very effective linear algebra formalism. $X$ is called the design matrix.
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+    \item Show that the empirical risk minimizer (ERM) $\hat{\bs \bb}$ is given by the following minimization $\hat{\bs \bb} = \underset{\bb}{\arg\min}\lVert X\bb - \bs y \Vert_2^2$.
+    
+    \item If $N > d$ and $X$ is full rank, show that $\hat{\bs \bb} = (X^\top X)^{-1}X^\top \bs y$. (Hint: you should take the gradients of the loss above with respect to $\bs \bb$ \footnote{You can check the linear algebra review here if needed \url{http://cs229.stanford.edu/section/cs229-linalg.pdf}}). Why do we need to use the conditions $N > d$ and $X$ full rank?  
+    
+\setcounter{saveenum}{\value{enumi}}  
+\end{enumerate}
+
+\textbf{\color{nyupurple} Hands on}\\
+Open the source code file \emph{hw1\_code\_source.py} from the \emph{.zip} folder. Using the function \texttt{get\_a}  get a value for $\bs a$, and draw a sample \texttt{x\_train, y\_train} of size $N=10$ and a sample \texttt{x\_test, y\_test} of size $N_{\rm test}=1000$ using the function \texttt{draw\_sample}.
+
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+    \item Write a function called \texttt{least\_square\_estimator} taking as input a design matrix $X \in \sR^{N \times (d + 1)}$ and the corresponding vector  $\bs y \in \sR^N$ returning $\hat{\bs b} \in \sR^{(d + 1)}$. Your function should handle any value of $N$ and $d$, and in particular return an error if $N \leq d$. (Drawing $x$ at random from the uniform distribution makes it almost certain that any design matrix $X$ with $d \geq 1$ we generate is full rank).
+    
+    \item Recall the definition of the empical risk $\hat{R}(\hat{f})$ on a sample $\{x_i, y_i\}_{i=1}^N$ for a prediction function $\hat{f}$. Write a function \texttt{empirical\_risk} to compute the empirical risk of $f_{\bs \bb}$ taking as input a design matrix $X \in \sR^{N \times (d + 1)}$, a vector $\bs y \in \sR^N$ and the vector  $\bs \bb \in \sR^{(d+1)}$ parametrizing the predictor.
+    
+    \item Use your code to estimate $\hat{\bs \bb}$ from \texttt{x\_train, y\_train} using $d=5$. Compare $\hat{\bs b}$ and $\bs a$. Make a single plot (Plot 1) of the plan $(x,y)$ displaying the points in the training set, values of the true underlying function $g(x)$ in $[0,1]$ and values of the estimated function $f_{\hat{\bs \bb}}(x)$ in $[0,1]$. Make sure to include a legend to your plot.
+    
+    \item Now you can adjust $d$. What is the minimum value for which we get a ``perfect fit"? How does this result relates with your conclusions on the approximation error above?
+    
+\setcounter{saveenum}{\value{enumi}}    
+\end{enumerate}    
+
+\textbf{\color{nyupurple} In presence of noise}\\
+Now we will modify the true underlying $P_{\mathcal{X} \times \mathcal{Y}}$, adding some noise in $y = g(x) + \epsilon$, with $\epsilon \sim \gN(0,1)$ a standard normal random variable independent from $x$. We will call training error $e_t$ the empirical risk on the train set and generalization error $e_g$ the empirical risk on the test set.
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+    \item Plot $e_t$ and $e_g$ as a function of $N$ for $d < N < 1000$ for $d = 2$, $d=5$ and $d=10$ (Plot 2). You may want to use a logarithmic scale in the plot. Include also plots similar to Plot 1 for 2 or 3 different values of $N$ for each value of $d$. 
+    
+    \item Recall the definition of the estimation error. Using the test set, (which we intentionally chose large so as to take advantage of the law of large numbers) give an empirical estimator of the estimation error. For the same values of $N$ and $d$ above plot the estimation error as a function of $N$ (Plot 3).
+    
+    \item The generalization error gives in practice an information related to the estimation error. Comment on the results of (Plot 2 and 3). What is the effect of increasing $N$? What is the effect of increasing $d$?
+    
+    \item Besides from the approximation and estimation there is a last source of error we have not discussed here. Can you comment on the optimization error of the algorithm we are implementing?
+    
+\setcounter{saveenum}{\value{enumi}}    
+\end{enumerate}
+
+\textbf{\color{nyupurple} Application to Ozone data (optional)}\\
+You can now use the code we developed on the synthetic example on a real world dataset. Using the command \texttt{np.loadtxt(`ozone\_wind.data')} load the data in the \emph{.zip}. The first column corresponds to ozone measurements and the second to wind measurements. You can try polynomial fits of the ozone values as a function of the wind values. 
+
+\begin{enumerate}
+\setcounter{enumi}{\value{saveenum}}
+    \item Reporting plots, discuss the again in this context the results when varying $N$ (subsampling the training data) and $d$. 
+\end{enumerate}
+
+\end{document}
