@@ -1,0 +1,170 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{minted}
+\input{math_commands}
+
+\newcommand{\wipcom}[1]{\textcolor{red}{WIP: #1}}
+\newcommand{\sol}[1]{\textcolor{gray}{sol: #1}}
+% \newcommand{\sol}[1]{}
+\newcommand{\nyuparagraph}[1]{\vspace{0.3cm}\textcolor{nyupurple}{\bf \large #1}\\}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\nll}{\rm NLL}
+
+\pagestyle{empty} \addtolength{\textwidth}{1.0in}
+\addtolength{\textheight}{0.5in} \addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{0.5in}
+\newcommand{\ruleskip}{\bigskip\hrule\bigskip}
+\newcommand{\nodify}[1]{{\sc #1}} \newcommand{\points}[1]{{\textbf{[#1
+points]}}}
+
+\newcommand{\bitem}{\begin{list}{$\bullet$}%
+{\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}%
+\setlength{\rightmargin}{0pt}}} \newcommand{\eitem}{\end{list}}
+
+\definecolor{nyupurple}{RGB}{134, 0, 179}
+\setlength{\parindent}{0pt} \setlength{\parskip}{0.5ex}
+
+\DeclareUnicodeCharacter{2212}{-}
+
+\theoremstyle{plain}
+\newtheorem*{thm*}{\protect\theoremname}
+\theoremstyle{definition}
+\newtheorem*{defn*}{\protect\definitionname}
+
+\begin{document}
+\newcounter{saveenum}
+
+\pagestyle{myheadings} \markboth{}{\color{nyupurple} DS-GA-1003 - Spring 2021}
+
+\begin{center}
+{\Large
+Homework 5: SGD for Multiclass Linear SVM
+} 
+\end{center}
+
+{
+{ \color{nyupurple} \textbf{Due:} Thursday, April 8, 2021 at 11:59PM EST} 
+} 
+
+\textbf{Instructions: }Your answers to the questions below, including plots and mathematical
+ work, should be submitted as a single PDF file.  It's preferred that you write your answers using software that typesets mathematics (e.g.LaTeX, LyX, or MathJax via iPython), though if you need to you may scan handwritten work.  You may find the \href{https://github.com/gpoore/minted}{minted} package convenient for including source code in your LaTeX document.  If you are using LyX, then the \href{https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings}{listings} package tends to work better.
+
+\ruleskip
+
+% \begin{enumerate}
+%   \setcounter{enumi}{\value{saveenum}}
+%   \setcounter{enumi}{\value{saveenum}}
+%   \item Show that the two approaches are equivalent, i.e. they will produce the same solution for $w$.
+% \setcounter{saveenum}{\value{enumi}}
+% \setcounter{saveenum}{\value{enumi}}
+% \end{enumerate}
+
+\section{Derivation}
+Suppose our output space and our action space are given as follows:
+$\cy=\ca=\left\{ 1,\ldots,k\right\} $. Given a non-negative class-sensitive
+loss function $\Delta:\cy\times\ca\to[0,\infty)$ and a class-sensitive
+feature mapping $\Psi:\cx\times\cy\to\reals^{d}$. Our prediction
+function $f:\cx\to\cy$ is given by
+\[
+f_{w}(x)=\argmax_{y\in\cy}\left\langle w,\Psi(x,y)\right\rangle .
+\]
+For training data $(x_{1},y_{1}),\ldots,(x_{n},y_{n})\in\cx\times\cy$,
+let $J(w)$ be the $\ell_{2}$-regularized empirical risk function
+for the multiclass hinge loss. We can write this as
+\[
+J(w)=\lambda\|w\|^{2}+\frac{1}{n}\sum_{i=1}^{n}\max_{y\in\cy}\left[\Delta\left(y_{i},y\right)+\left\langle w,\Psi(x_{i},y)-\Psi(x_{i},y_{i})\right\rangle \right]
+\]
+for some $\lambda>0$.
+\begin{enumerate}
+  \setcounter{enumi}{\value{saveenum}}
+\item Show that $J(w)$ is a convex function of $w$. You
+may use any of the rules about convex functions described in our \href{https://davidrosenberg.github.io/mlcourse/Notes/convex-optimization.pdf}{notes on Convex Optimization},
+in previous assignments, or in the Boyd and Vandenberghe book, though
+you should cite the general facts you are using. {[}Hint: If $f_{1},\ldots,f_{m}:\reals^{n}\to\reals$
+are convex, then their pointwise maximum $f(x)=\max\left\{ f_{1}(x),\ldots,f_{m}(x)\right\} $
+is also convex.{]}
+
+
+\item Since $J(w)$ is convex, it has a subgradient at every point. Give
+an expression for a subgradient of $J(w)$. You may use any standard
+results about subgradients, including the result from an earlier homework
+about subgradients of the pointwise maxima of functions. (Hint: It
+may be helpful to refer to $\hat{y}_{i}=\argmax_{y\in\cy}\left[\Delta\left(y_{i},y\right)+\left\langle w,\Psi(x_{i},y)-\Psi(x_{i},y_{i})\right\rangle \right]$.)
+
+
+\item Give an expression for the stochastic subgradient based on the point
+$(x_{i},y_{i})$.
+
+
+\item Give an expression for a minibatch subgradient, based on the points
+$(x_{i},y_{i}),\ldots,\left(x_{i+m-1},y_{i+m-1}\right)$.
+
+
+\setcounter{saveenum}{\value{enumi}}
+\end{enumerate}
+
+\nyuparagraph{(Optional) Hinge Loss is a Special Case of Generalized Hinge
+Loss}
+
+Let $\cy=\left\{ -1,1\right\} $. Let $\Delta(y,\hat{y})=\ind{y\neq\hat{y}}.$
+If $g(x)$ is the score function in our binary classification setting,
+then define our compatibility function as 
+\begin{eqnarray*}
+h(x,1) & = & g(x)/2\\
+h(x,-1) & = & -g(x)/2.
+\end{eqnarray*}
+Show that for this choice of $h$, the multiclass hinge loss reduces
+to hinge loss: 
+\[
+\ell\left(h,\left(x,y\right)\right)=\max_{y'\in\cy}\left[\Delta\left(y,y')\right)+h(x,y')-h(x,y)\right]=\max\left\{ 0,1-yg(x)\right\} 
+\]
+
+
+\section{Implementation}
+
+In this problem we will work on a simple three-class classification
+example.
+The data is generated and plotted for you in the skeleton code. 
+
+\nyuparagraph{One-vs-All (also known as One-vs-Rest)}
+
+First we will implement one-vs-all multiclass classification.
+Our approach will assume we have a binary base classifier that returns
+a score, and we will predict the class that has the highest score. 
+\begin{enumerate}
+  \setcounter{enumi}{\value{saveenum}}
+\item Complete the methods \texttt{fit}, \texttt{decision\_function} and \texttt{predict} from \texttt{OneVsAllClassifier}  in the skeleton code. Following
+the \texttt{OneVsAllClassifier} code is a cell that extracts the results of
+the fit and plots the decision region. You can have a look at it first to make sure you understand how the class will be used.
+\item  Include the results of the test cell in your submission.
+\setcounter{saveenum}{\value{enumi}}
+\end{enumerate}
+
+
+\nyuparagraph{Multiclass SVM}
+
+In this question, we will implement stochastic subgradient descent
+for the linear multiclass SVM, as described in class and in this
+problem set. We will use the class-sensitive feature mapping approach
+with the ``multivector construction'', as described in the multiclass lecture.
+\begin{enumerate}
+  \setcounter{enumi}{\value{saveenum}}
+\item Complete the function \texttt{featureMap} in the skeleton code.
+\item Complete the function \texttt{sgd}.
+\item Complete the methods \texttt{subgradient}, \texttt{decision\_function} and \texttt{predict} from the class \texttt{MulticlassSVM}. 
+\item Following the multiclass
+SVM implementation, we have included another block of test code. Make
+sure to include the results from these tests in your assignment, along
+with your code. 
+\setcounter{saveenum}{\value{enumi}}
+\end{enumerate}
+
+\end{document}
