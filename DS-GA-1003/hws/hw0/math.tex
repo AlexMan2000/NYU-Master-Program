@@ -1,0 +1,146 @@
+
+\NewEnviron{largeequation}{%
+    \begin{align*}
+    \scalebox{1.5}{$\BODY$}
+    \end{align*}
+    }
+
+\DeclareMathOperator{\conv}{conv}
+
+\def\Kset{\mathbb{K}}
+\def\Nset{\mathbb{N}}
+\def\Qset{\mathbb{Q}}
+\def\Rset{\mathbb{R}}
+\def\Sset{\mathbb{S}}
+\def\Zset{\mathbb{Z}}
+\def\squareforqed{\hbox{\rlap{$\sqcap$}$\sqcup$}}
+\def\qed{\ifmmode\squareforqed\else{\unskip\nobreak\hfil
+\penalty50\hskip1em\null\nobreak\hfil\squareforqed
+\parfillskip=0pt\finalhyphendemerits=0\endgraf}\fi}
+
+%\DeclareMathOperator{\E}{\rm E}
+\newcommand{\E}{\mathbb{E}}
+
+\DeclareMathOperator*{\argmax}{\rm argmax}
+\DeclareMathOperator*{\argmin}{\rm argmin}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\last}{last}
+\DeclareMathOperator{\nul}{nul}
+\DeclareMathOperator{\col}{col}
+\DeclareMathOperator{\row}{row}
+\DeclareMathOperator{\Card}{Card}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+% \providecommand{\norm}[1]{\left\lVert#1\right\rVert}
+\def\vcdim{\textnormal{VCdim}}
+
+\newcommand{\cQ}{{\mathcal Q}}
+\newcommand{\cX}{{\mathcal X}}
+\newcommand{\cY}{{\mathcal Y}}
+\newcommand{\cA}{{\mathcal A}}
+\newcommand{\cB}{{\mathcal B}}
+\newcommand{\cF}{{\mathcal F}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\mat}[1]{{\mathbf #1}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\bmu}{\boldsymbol{\mu}}
+\newcommand{\ba}{\mat{a}}
+\newcommand{\bu}{\mat{u}}
+\newcommand{\bw}{\mat{w}}
+\renewcommand{\v}{\mat{v}}
+\newcommand{\w}{\mat{w}}
+\newcommand{\bx}{\mat{x}}
+\newcommand{\bX}{\mat{X}}
+\newcommand{\sfp}{{\mathsf p}}
+\newcommand{\sfq}{{\mathsf q}}
+\newcommand{\Alpha}{{\boldsymbol \alpha}}
+\newcommand{\Mu}{{\boldsymbol \mu}}
+\newcommand{\hmu}{\hat{\mu}}
+\newcommand{\ssigma}{{\boldsymbol \sigma}}
+\newcommand{\ignore}[1]{}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bd}{\begin{description}}
+\newcommand{\ed}{\end{description}}
+\newcommand{\h}{\widehat}
+\newcommand{\tl}{\widetilde}
+\newcommand{\e}{\epsilon}
+\renewcommand{\H}{\text{0}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\scrH}{{\mathscr H}}
+\newcommand{\T}{\text{1}}
+\newcommand{\set}[2][]{#1 \{ #2 #1 \} }
+\newcommand{\R}{\mathfrak{R}}
+\newcommand{\hint}{\emph{hint}}
+\newcommand{\eps}{\epsilon}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\newcommand{\hnorm}[1]{\left\lVert #1 \right\rVert_{\mathbb{H}}}
+\renewcommand{\T}{^{\top}}
+\newcommand{\hinp}[1]{\left\langle #1\right\rangle_{\mathbb{H}}}
+\newcommand{\inp}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\Tr}{\text{Tr}}
+
+\newcommand\SM{\mathbf{S}}
+\newcommand{\ip}[2]{\langle #1, #2 \rangle}
+\newcommand{\twomat}[4]{\begin{bmatrix} #1 & #2 \\ #3 & #4 \end{bmatrix}}
+\newcommand{\round}[1]{\text{round}(#1)}
+\newcommand{\abserr}[1]{\text{abserr}(#1)}
+\newcommand{\relerr}[1]{\text{relerr}(#1)}
+\newcommand{\ulp}[1]{\text{ulp}(#1)}
+\newcommand{\tr}{\text{tr }}
+\DeclareMathOperator{\diag}{\text{diag}}
+
+
+\renewcommand{\v}[1]{\mathbf{#1}}
+
+
+\def\Kset{\mathbb{K}}
+\def\Nset{\mathbb{N}}
+\def\Qset{\mathbb{Q}}
+\def\Rset{\mathbb{R}}
+\def\Sset{\mathbb{S}}
+\def\Zset{\mathbb{Z}}
+\def\squareforqed{\hbox{\rlap{$\sqcap$}$\sqcup$}}
+\def\qed{\ifmmode\squareforqed\else{\unskip\nobreak\hfil
+\penalty50\hskip1em\null\nobreak\hfil\squareforqed
+\parfillskip=0pt\finalhyphendemerits=0\endgraf}\fi}
+
+
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\ensuremath{\left\lVert#1\right\rVert}}
+\def\vcdim{\textnormal{VCdim}}
+
+
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\bh}{\mat{h}}
+\newcommand{\bz}{\mat{z}}
+\renewcommand{\v}{\mat{v}}
+\newcommand{\bU}{\mat{U}}
+\newcommand{\bD}{\mat{D}}
+\newcommand{\bW}{\mat{W}}
+\newcommand{\by}{\mat{y}}
+\newcommand{\bk}{\mat{k}}
+\newcommand{\ttheta}{{\boldsymbol \theta\textbf{}}}
+\renewcommand{\H}{\text{0}}
+\renewcommand{\P}{\mathbb{P}}
+\renewcommand{\T}{^{\top}}
+\newcommand{\twovec}[2]{\begin{bmatrix} #1 \\ \vdots\\#2 \end{bmatrix}}
+
+
+\newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\newcommand\nindep{\protect\mathpalette{\protect\not\independenT}{\perp}}
