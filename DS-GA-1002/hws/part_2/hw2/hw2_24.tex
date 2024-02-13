@@ -1,0 +1,110 @@
+\documentclass[12pt,twoside]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,graphicx,amsmath,amsfonts,amscd,amssymb,bm,cite,epsfig,epsf,url}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{amsthm,multirow,wasysym,appendix}
+\usepackage{array,subcaption} 
+% \usepackage[small,bf]{caption}
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usetikzlibrary{spy}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows,automata}
+\usepackage{thmtools}
+\usepackage{blkarray} 
+\usepackage{textcomp}
+\usepackage[left=0.8in,right=1.0in,top=1.0in,bottom=1.0in]{geometry}
+
+\input{macros}
+
+\begin{document}
+
+\begin{center}
+{\large{\textbf{Homework 2}} } \vspace{0.2cm}\\
+Due Feb 11 at 11 pm
+\\
+\end{center}
+\input{hwstatement.tex}\\
+
+\begin{enumerate}
+
+\item (Properties of covariance) 
+Prove the following properties of covariance (you can use properties established in the chapter).\\ 
+
+For any random variables $\ra$ and $\rb$ with finite variance:
+\begin{enumerate} 
+\item For any $\alpha$, $\beta \in \R$
+\begin{align}
+\cov \ssqbr{\beta \ra + \alpha,\rb} & = \beta \cov \ssqbr{\ra,\rb}. 
+\end{align} 
+\item 
+\begin{align}
+\cov \ssqbr{\ra+\rb,\ra -\rb} = \var \ssqbr{\ra} - \var \ssqbr{\rb}.
+\end{align}
+\end{enumerate}
+
+\item (Standardized variables and the sample correlation coefficient) 
+We study the sample correlation coefficient $\rho_{X,Y} $ from Definition~8.10. 
+
+We denote the OLS estimator of $y_i$, given $x_i$ by $\ell_{\op{OLS}} (x_i)$ and the corresponding residual by 
+\begin{align}
+r_i := y_i -  \ell_{\op{OLS}} (x_i), \qquad 1\leq i \leq n.
+\end{align}
+(\emph{Hint: For all the proofs, follow the same arguments as in the chapter, replacing the expectation operator by the averaging operator.})
+\begin{enumerate} 
+\item For the standardized data
+\begin{align}
+s(x_i) & := \frac{x_i - m(X)}{\sqrt{v(X)}}, \\
+s(y_i) & := \frac{y_i - m(Y)}{\sqrt{v(Y)}}, \quad 1 \leq i \leq n,
+\end{align}
+where $m(X)$ and $m( Y)$ are the sample means of $X$ and $Y$, and $v(X)$ and $v(Y)$ the sample variances, we define the standardized datasets as $S_X:= \keys{s(x_1),s(x_2),\ldots,s(x_n)}$ and $S_Y:= \keys{s(y_1),s(y_2),\ldots,s(y_n)}$. Show that the sample mean of the standardized data is zero,
+\begin{align}
+m(S_X) = m(S_Y)=0,
+\end{align}
+the sample variance is one,
+\begin{align}
+v(S_X) & = \frac{1}{n-1}\sum_{i=1}^{n}s(x_i)^2 = 1,\\
+v(S_Y) & = \frac{1}{n-1}\sum_{i=1}^{n}s(y_i)^2 =1,
+\end{align}
+and the sample covariance is equal to the sample correlation coefficient of the original data,
+\begin{align}
+c(S_X,S_Y)=\frac{1}{n-1}\sum_{i=1}^{n}s(x_i)s(y_i) = \rho_{X,Y}.
+\end{align}
+\item Prove that 
+\begin{align}
+\frac{1}{n-1} \sum_{i=1}^{n} r_i^2 & = \brac{1 - \rho_{X,Y}^2} v(Y).
+\end{align}
+\item Prove that the sample correlation coefficient satisfies the same bounds as the correlation coefficient,
+\begin{align}
+-1 \leq \rho_{X,Y} \leq 1,
+\end{align}
+as long as $v(Y)$ is not zero.
+\item Prove that if $\rho_{X,Y} = \pm 1$, then $y_i = \beta x_i + \alpha$, $1 \leq i \leq n$, for some constant $\alpha$, $\beta \in \R$.
+\end{enumerate}
+
+\item (Height and Weight)
+The table in \texttt{ANSUR II MALE Public.csv} reports physical measurements of members of the US army. In this problem, we will work with simple linear regression to estimate weight (\textit{Weightlbs}) as a function of height (\textit{Heightin}). Let \(h\) represent height (in inches) and \(w\) represent weight (in pounds).
+
+\begin{enumerate}
+	\item Compute the OLS estimator of weight given height. Add this line on a scatterplot (with $h$ on the x-axis; $w$ on the y-axis) and also provide the OLS estimator in equation form:
+\[
+\hat{w} = \hat{\beta}_0 + \hat{\beta}_1 h
+\]
+
+
+	\item Compute the sample covariance between the height and the residual of the OLS estimator. Are they correlated?
+    \item Interpret the slope coefficient, $\hat{\beta}_1$.	
+	\item Compute the sample variance of the weight, the OLS estimator of the weight, and the residual. What relationship do you find among these three values?
+	\item Compute and compare the sample coefficient of determination (using its definition as the fraction of the variance explained by the linear estimator), and compare it to the squared sample correlation coefficient.
+	\item Compute the OLS estimator of \(h\) given \(w\). Then rearrange this formula to express \(w\) as a function of \(h\).
+\[
+\tilde{w} = \tilde{\beta}_0 + \tilde{\beta}_1 h
+\]	
+	 Add this line also on the scatterplot (in a different color), and compare it with your initial OLS line.
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

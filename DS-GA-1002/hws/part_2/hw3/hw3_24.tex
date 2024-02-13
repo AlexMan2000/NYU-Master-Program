@@ -1,0 +1,63 @@
+\documentclass[12pt,twoside]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,graphicx,amsmath,amsfonts,amscd,amssymb,bm,cite,epsfig,epsf,url}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{amsthm,multirow,wasysym,appendix}
+\usepackage{array,subcaption} 
+% \usepackage[small,bf]{caption}
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usetikzlibrary{spy}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows,automata}
+\usepackage{thmtools}
+\usepackage{blkarray} 
+\usepackage{textcomp}
+\usepackage[left=0.8in,right=1.0in,top=1.0in,bottom=1.0in]{geometry}
+
+\input{macros}
+
+\begin{document}
+
+\begin{center}
+{\large{\textbf{Homework 3}} } \vspace{0.2cm}\\
+Due Feb 18 at 11 pm
+\\
+\end{center}
+\input{hwstatement.tex}\\
+
+\begin{enumerate}
+
+
+\item (Markov's and Chebyshev's inequalities are tight)
+In this problem we show that Markov's and Chebyshev's inequalities cannot be improved without further assumptions, because there exist random variables for which they are tight. 
+\begin{enumerate}
+\item For any $c >0$ and any $0 < \theta < 1$, build a nonnegative random variable $\ra$ such that 
+\begin{align}
+\P\brac{\ra \geq c} = \theta = \frac{\E\sqbr{ \ra }}{c}.
+\end{align} 
+\item For any $c >0$, any $0 < \theta < 1$ and any $\mu \in \R$, build a random variable $\rb$ with mean $\mu$ and finite variance, such that 
+\begin{align}
+\P\brac{ | \rb - \mu | \geq c} = \theta = \frac{\var\ssqbr{\rb} }{c^2}.
+\end{align} 
+\end{enumerate}
+
+\item (Online poll) In online polls, young people are often overrepresented. In this problem we study how to correct for this. When answering the questions use the following notation: $\alpha$ is the proportion of young people (between 18 and 35 years old) in the population, $\theta_1$ the proportion of young people in the population who will vote for the Democratic candidate, $\theta_2$ the proportion of old people in the population who will vote for the Democratic candidate, $n_1$ the number of young people in the poll, and $n_2$ the number of old people in the poll. Assume that $\alpha$ is known.
+\begin{enumerate}
+\item Derive an estimator of the proportion of voters that will vote for the Democratic candidate, as a function of the number of young people $y$ and the number of old people $o$ in the poll that intend to vote Democrat. 
+\item Evaluate your estimator for a poll with 100 participants where 60 intend to vote for the Democratic candidate. Out of the 100 participants, 70 are young, and 50 of them intend to vote for the Democratic candidate. The fraction of young people among voters in general is 25\%. 
+\item Under what assumptions is your estimator unbiased? Justify your answer mathematically.
+\item Show that your estimator is consistent as $n_1 \rightarrow \infty$ and  $n_2 \rightarrow \infty$.
+\end{enumerate}
+
+
+
+\item (Blood Pressure) The table in \texttt{cardio.csv} records the systolic blood pressure (\textit{``ap\_hi"}) of patients. Randomly sample subsets consisting of $0.1\%, 0.2\%, \cdots, 99.9\%$ of the full dataset. 
+\begin{enumerate}
+\item Compute and plot the bias and variance of these subsets as a function of the number of samples. Interpret your findings.
+\item Approximate the probability that \textit{ap\_hi} deviates from the corresponding population mean via Monte Carlo simulations, and compare it to the Chebyshev bound that we use to prove the law of large numbers.
+\end{enumerate}
+\end{enumerate}
+\end{document}
