@@ -1,0 +1,172 @@
+\documentclass[11pt]{article}
+
+\input{packages}
+\input{math}
+
+\newif\ifshow
+\showtrue
+\ifshow
+\newenvironment{solution}{\proof[Solution]\color{blue}}{\endproof}
+
+\else
+\excludecomment{solution}
+\fi
+
+\begin{document}
+
+
+\title{DS-GA 1003 Machine Learning: Homework 1 \\
+\textbf{\large{Due 11.59 p.m. EST, February 27, 2024 on Gradescope}}}
+\author{{\color{blue}(fill in your name here)}\\
+    {\color{blue}(collaborators if any)}}
+\date{}
+\maketitle
+\vspace{-1cm}
+
+\noindent \textbf{We encourage \LaTeX-typeset submissions but will accept quality scans of hand-written pages.}
+
+\section{Linear Regression Model}
+
+Consider the data generating process as such: $\bx \in \mathbb{R}^D$ is drawn from some unknown $p(\bx)$ and $y = w_1^{true} x_1 + \epsilon_y$, where $w_1^{true} \in \mathbb{R}$ and $\epsilon_y \sim \mathcal{N}(0,1)$. This is unknown to us, as a result, we construct a linear model for $y$ using all $D$ features of $\bx$, instead of just using $x_1$.
+
+\begin{enumerate}[label=(\Alph*)]
+    \item Explain what the terms \textbf{model class} and \textbf{model misspecification} mean. Is our model correctly \textit{specified} here? Why or why not?
+
+    \begin{solution}
+        Write your solution for each question using the \texttt{solution} environment. Feel free to use style packages to your convenience, e.g. \hl{highlighting parts of your solution that you still need to work on.}
+    \end{solution}
+
+\end{enumerate}
+
+\noindent Let $\widehat{w_1}$ be the estimate of $w_1^{true}$ using only $x_1$ and let $\widehat{w_1^{all}}$ be the estimate of $w_1^{true}$ when using all of $\bx$. We will study the effects of our model by analyzing the relationships between $\E[\widehat{w_1^{all}}]$ and $\E[\widehat{w_1}]$, as well as between $\text{Var}[\widehat{w_1^{all}}]$ and $\text{Var}[\widehat{w_1}]$. We do so empirically by running PyTorch simulations as follows:
+
+\begin{enumerate}
+
+    \item Pick any value of $w_1^{true}$ you like as ground truth, e.g. with \texttt{torch.randn(1)}.
+
+    \item Write a function, taking $D$ and $c$ as input, that does the following: \textbf{(1)} Generate $N=50$ samples of $\bx \sim \mathcal{N}(\mathbf{0},\Sigma)$, where  $\Sigma$ is the $D \times D$ covariance matrix with all diagonal entries equal to $\sigma^2 = 1$ and all off-diagonal entries equal to $c$. \textbf{(2)} Compute $y$ using the relationship above (note that $y$ only depends on the first feature). This involves drawing $N$ samples of noise $\epsilon_y \sim \mathcal{N}(0,1)$. \textbf{(3)} Using our dataset of $N$ samples $\{(\bx_i,y_i)\}^N_{i=1}$, compute the least-squares solutions for $\widehat{w_1^{all}}$ (i.e. using all features and taking the first coefficient) and $\widehat{w_1}$ (i.e. using only one feature).
+
+    \item Write a function that performs Step 2 for $T=100$ trials, i.e. each trial generates a new dataset to compute $\widehat{w_1^{all}}$ and $\widehat{w_1}$. (Note that $w_1^{true}$ is constant throughout.) For each estimator, compute the mean and standard deviation of the $T$ trials.
+
+    \item Perform Step 3 for each $c \in \{0.1,0.2,0.3,\ldots,0.9\}$ and each $D \in \{2,4,8,16,32\}$. Separately plot the means and standard deviations as a function of $c$, using the same plot for both estimators. This means you should have 10 plots altogether: two plots (means and standard deviations) for each of the five choices of $D$. Each plot will contain two curves (the two estimators).
+\end{enumerate}
+
+\begin{enumerate}[label=(\Alph*)]
+\setcounter{enumi}{1}
+
+    \item What do you observe with respect to $c$ and $D$? How do you explain your results? Show a few (not all) of your 10 generated plots to support your answer.
+
+\end{enumerate}
+
+\newpage
+\section{Bayesian Linear Regression Model}
+
+Consider the data generating process as such: $x \sim \mathcal{N}(0,1)$ and $y = w_{true} x^2 + \epsilon$, where $w_{true}=1.0$, $\epsilon \sim \mathcal{N}(0,\sigma^2)$, and $\sigma^2=1.0$. Again, this is unknown to us. We will model the data using Bayesian linear regression.
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Using PyTorch, simulate a dataset $\mathcal{D}_N = \{(x_i,y_i)\}^N_{i=1}$ for each $N \in \{10,100,1000, 10000\}$ according to the true data generating process above. For our Bayesian linear regression model, let us choose our prior as $w \sim N(0,1)$ and our likelihood as $y|w,x \sim N(wx,\sigma^2)$ for $\sigma^2=1.0$. Compute the mean and variance of the posterior $w|\mathcal{D}_N$ for each dataset. Does the posterior concentrate on $w_{true}$? Why or why not?
+
+    \item What would be challenging about our analysis in part (A) if we had picked a different prior, for example, Laplace or Gamma?
+
+    \item Repeat part (A), except we use the basis set $\bm{\phi}(x)=[x,x^2]$ (instead of $x$ itself) and perform 2D Bayesian linear regression. We choose our prior to be $\bw \sim N(\mathbf{0},\mathbf{I})$, where $\mathbf{I}$ is the $2 \times 2$ identity matrix, and our likelihood to be $y|\mathbf{w},x \sim N(\mathbf{w}^\top \bm{\phi}(x), \sigma^2)$ for $\sigma^2=1.0$. Compute the mean and variance of the posterior $\mathbf{w}|\mathcal{D}_N$ for each dataset. What do you observe about the posterior as $N$ changes? Why?
+
+    \item Reflecting on your answers in parts (A) and (C), name one challenge that \textbf{cannot be solved} by using a Bayesian model (instead of a frequentist approach like standard linear regression).
+
+    \item Reflecting on your answers in part (C) and in Question 1, name one challenge that \textbf{can be improved} by using a Bayesian model.
+
+    \textit{Hint: Both part (C) above and Question 1 involve doing linear regression with many correlated features. How do these two sets of findings relate? Does using a Bayesian approach affect the way the model treats correlated features?}
+
+\end{enumerate}
+
+\newpage
+\section{Class-Conditional Gaussian Generative Model}
+
+Consider a classification task where $\bx \in \mathbb{R}^D$ and $y \in \{1,\ldots, K\}$. We observe the dataset $\mathcal{D} = \{(\bx_i,y_i)\}_{i=1}^N$. Let us construct a model for the joint distribution as
+\begin{align*}
+    p_\theta(\bx,y) = p_\theta(\bx|y)p_\theta(y)
+\end{align*}
+where $\theta$ denotes the set of all parameters of the model.
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Our model is known as a \textbf{class-conditional generative model}. What about the model makes it generative? What makes it class-conditional?
+
+    \item For a given value of $\theta$, how would you predict the label for a new test point $\bx_\star$ using your model $p_\theta(\bx,y)$?
+
+\end{enumerate}
+
+\noindent Let us model $y$ as a Categorical distribution $\text{Cat}(\bm{\pi})$. Here $p_\theta(y=k) \triangleq \pi_k$, where $\bm{\pi}=[\pi_1,\ldots,\pi_K]$ such that $\forall k,\, \pi_k \geq 0$ and $\sum_k \pi_k=1$. You may leave $p_\theta(\bx|y)$ unspecified for now.
+
+\begin{enumerate}[label=(\Alph*)]
+\setcounter{enumi}{2}
+
+    \item Write down an expression for the log-likelihood of the observed dataset $\mathcal{D}$.
+
+    \item Derive an expression for the maximum likelihood estimator (MLE) for $\bm{\pi}$, which we will denote as $\widehat{\bm{\pi}}$. Make sure to account for the constraints on $\bm{\pi}$ using Lagrange multipliers.
+
+\end{enumerate}
+
+\noindent Let us further model $\bx|y$ as (multivariate) Gaussian distributions $\mathcal{N}(\bx; \bm{\mu}_k, \Sigma_k)$ for all $K$ classes, where $\bm{\mu}_k \in \mathbb{R}^D$ and $\Sigma_k$ is a $D \times D$ (positive semi-definite) covariance matrix. Assume that there are only $K=2$ classes. This means that the total set of parameters are $\theta=\{\bm{\pi},\bm{\mu}_1, \bm{\mu}_2,\Sigma_1,\Sigma_2\}$.\\
+
+\noindent Now, consider the case where the data comes from this model.
+That is, $y \sim \text{Cat}(\bm{\pi}^{true})$ and $\bx|y=k \sim \mathcal{N}(\bm{\mu}_k^{true},\Sigma_k^{true})$ for all $k$.
+After we observe this data, we can then construct a \textit{discriminative model} to predict $y$ from $\bx$, that is, we will learn a model for $p_{true}(y=k|\bx)$. Let us do so using \textbf{logistic regression}:
+\begin{align*}
+    y|\bx \sim \text{Bernoulli}(\sigma(\bw^\top \bx))
+\end{align*}
+where $\bw$ are the parameters of the model and $\sigma(z)$ is the logistic sigmoid:
+\begin{align*}
+    \sigma(z) = \frac{1}{1+\exp[-z]}
+\end{align*}
+
+\begin{enumerate}[label=(\Alph*)]
+\setcounter{enumi}{4}
+
+    \item Will logistic regression always be able to model the true data conditional $p_{true}(y=k|\bx)$? If so, why? If sometimes, when? And if there are any cases where logistic regression will not be able to model $p_{true}(y=k|\bx)$, are there any ways to fix it?
+
+\end{enumerate}
+
+\newpage
+\section{Poisson Generalized Linear Model}
+
+Consider a classification task where $\bx \in \mathbb{R}^D$ and $y \in \mathbb{N} = \{0,1,2,3,\dots\}$, noting that the support of $y$ is the unbounded set of natural numbers. We have an observed dataset $\mathcal{D} = \{(\bx_i,y_i)\}_{i=1}^N$. Let us also assume that the number of features, $D$, is larger than the number of examples, $N$. We will model this data using a Poisson Generalized Linear Model (GLM). Let $\boldsymbol \theta$ denote the linear coefficients of the model.
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Write down the log-likelihood function of the Poisson GLM.
+
+    \item Given a test point $\bx_\star$ and some estimate $\hat{\bm{\theta}}$ of the parameter, how do you make a prediction $\hat{y}_\star$?
+
+    \item Now suppose that the parameter $\hat{\bm{\theta}}$ of the Poisson GLM is estimated using $\ell_2$-regularized maximum likelihood estimation. If the test point $\bx_\star$ is \textit{orthogonal} to the subspace generated by the training data, what is the distribution $\hat{y}_\star|\bx_\star$ predicted by the Poisson GLM model? Prove your answer.
+
+    \item From your answer to part (C), motivate $\ell_1$-regularization when the number of features, $D$, is larger than the number of examples, $N$.
+\end{enumerate}
+
+\newpage
+\section{Distances and Optimization Directions}
+Consider two pairs of distributions with mean and variance parameterization:
+\begin{itemize}
+\item[] \hspace{1em} \textbf{Pair 1}: \text{Normal}(0, 0.0001), \text{Normal}(0.1, 0.0001)
+\item[] \hspace{1em} \textbf{Pair 2}: \text{Normal}(0, 1000), \text{Normal}(0.1, 1000)
+\end{itemize}
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Make two plots where each plot shows the pdfs for the distributions in the pair.
+
+    \item Compute the Euclidean distance between the parameter vector $(\textrm{mean}, \textrm{variance})$ for both pairs of distributions.
+    For the same pairs of distributions compute the KL-divergence. Which distance fits intuition better and why?
+
+    \item Assume $\boldsymbol \theta_t$ is a parameter for a probability distribution and $\rho_t$ is a scalar. What is the solution to the following optimization algorithm?
+        \begin{align*}
+            \max_{\boldsymbol \theta_{t+1}} \sum_{i=1}^n \log p_{\boldsymbol \theta_{t}}(y_i | \bx_i) + (\boldsymbol \theta_{t+1} - \boldsymbol \theta_t)^\top \left[\nabla_{\boldsymbol \theta} \sum_{i=1}^n \log p_{\boldsymbol \theta}(y_i | \bx_i) \Bigr|_{\boldsymbol \theta = \boldsymbol \theta_t}\right] - \frac{1}{2\rho_t}||\boldsymbol \theta_{t+1} - \boldsymbol \theta_t||_2^2
+        \end{align*}
+        
+    \item What algorithm does the previous solution correspond to? Does part (B) say anything about why this algorithm might be suboptimal?
+    How would you fix it?
+\end{enumerate}
+
+
+
+\end{document}
