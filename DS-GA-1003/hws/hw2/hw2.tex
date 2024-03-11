@@ -1,0 +1,277 @@
+\documentclass[11pt]{article}
+
+\input{packages}
+\input{math}
+
+\newif\ifshow
+\showtrue 
+\ifshow
+\newenvironment{solution}{\proof[Solution]\color{blue}}{\endproof} 
+
+\else
+\excludecomment{solution}
+\fi
+
+\begin{document}
+
+
+\title{DS-GA 1003 Machine Learning: Homework 2 \\
+\textbf{\large{Due 11.59 p.m. EST, March 26, 2024 on Gradescope}}}
+\author{{\color{blue}(fill in your name here)}\\
+    {\color{blue}(collaborators if any)}}
+\date{}
+\maketitle
+
+\noindent \textbf{We encourage \LaTeX-typeset submissions but will accept quality scans of hand-written pages.}
+
+
+\section{Very Random Forest}
+
+Consider building a random forest by both subsampling the data and 
+choosing a single feature per tree randomly. For example, consider a dataset $\cD = \{(\bx_1,y_1),...,(\bx_N,y_N)\}$ where $\bx_i\in\Rset^D$ and $y_i\in\Rset$ for $i=1,..,N$. We will carry out the following procedure:
+\begin{enumerate}
+    \item Randomly sample one feature index $j \in \{1,\dots,D\}$.
+    
+    \item Draw a sample of the data $\cD_{\mathbf{k}}$ of size $M\leq N$ with replacement. These datapoints will have indices $\mathbf{k} = k_1,\dots,k_M$.
+    
+    \item Keep only the $j^{th}$ feature of the $M$ samples:
+    i.e. letting $x_{i,j}$ be the $i^{th}$ datapoint and $j^{th}$ feature, we use data
+    $$\cD^{j}_{\mathbf{k}}=\{(x_{(k_1,j)},y_{(k_1)}),...,(x_{(k_M,j)},y_{(k_M)})\}$$
+    
+    \item Build a decision tree on $\cD^{j}_{\mathbf{k}}$.
+    
+    \item Repeat the above process $R$ times so that $r^{th}$ tree $T_r$
+    uses feature $j^{(r)}$ and data $\mathbf{k}^{(r)}$ for $r \in \{1,\ldots,R\}$. Using this notation, the prediction of the $r^{th}$ tree 
+    on new input $\mathbf{x}^\star$
+    is
+    $T_r(\mathbf{x}^\star ;\cD^{j^{(r)}}_{\mathbf{k}^{(r)}})$.
+    
+    \item Average these random trees to construct the random forest. That is, for input $\mathbf{x}^\star$, the random forest predicts $\hat{y} = \frac{1}{R} \sum^R_{r=1} T_r(\mathbf{x}^\star;\cD^{j^{(r)}}_{\mathbf{k}^{(r)}})$.
+
+\end{enumerate}
+
+\noindent Let us call this model a Very Random Forest (VRF). 
+In this question, we will characterize the \textit{bias} of an VRF (in the context of bias-variance tradeoff). 
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Write down the two term that have to be equal for a model to be unbiased. One term should be some statistic of the true data distribution and the other should be a statistic of the model output.
+    
+    \begin{solution}
+        Write your solution for each question using the \texttt{solution} environment. Feel free to use style packages to your convenience, e.g. \hl{highlighting parts of your solution that you still need to work on.}
+    \end{solution}
+
+    \item Let us first consider a single decision tree $T(\bx, \mathcal{D}^j)$ that uses only a single feature $j$ but the \textbf{entire} dataset (i.e. all $N$ data points). Assuming that the tree was trained by minimizing squared loss, what will be the tree's prediction for a test point $\bx^\star$? I.e. write down the function that $T(\bx^\star, \mathcal{D}^j)$ corresponds to.
+    
+    
+    \item Now, express the model-dependent term that you wrote in part (A) in terms of your answer in (B). 
+
+    
+    \item As $N \to \infty$, what data-dependent function does your answer in part (C) converge to? You may assume that your VRF has sufficient capacity to model this function arbitrarily well.
+    Describe in words the source of bias.  
+
+    \item Let us build another VRF. Each tree in this forest is built by randomly sampling \textit{two different features} instead of one in step 1. 
+    As $N \to \infty$, what data-dependent function does your answer in part (C) converge to? 
+    How does using two different features instead of one reduce the bias of VRF?
+    
+    \item Compare the bias and variance of the VRF's with the traditional random forest, where we select a random subset of the data and a random subset of features to build each tree.
+    
+    \textit{Hint: Look at the generalization bound from the lecture on random forests. You only need to look at the final result, not the derivation.}
+
+
+\end{enumerate}
+
+\newpage 
+
+
+\section{Conditional Modelling with Gaussians}
+
+For any finite set of points $\cD=\{(\bx_1,y_1),...,(\bx_N,y_N)\}$, assume the following conditional model:
+\[\left.\twovec{y_1}{y_N}\right|\bx_1,...,\bx_N\sim \cN(\vec{0}, K)\]
+Here, $K$ is a covariance matrix such that $K_{ij} := k(\bx_i,\bx_j) = \exp(-\frac{1}{2}\norm{\bx_i-\bx_j}^2)$. You may assume that $K$ is positive-definite for any dataset $\mathcal{D}$. 
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item For any set of $(N+1)$ points $\bx_1, \dots, \bx_{N+1}$, write the down the distribution of $y_1, \cdots y_N, y_{N+1}  \mid  \bx_1, \cdots \bx_N, \bx_{N+1}$ under the assumed model.
+    
+    
+    \item Given a dataset $\cD=\{(\bx_1,y_1),...,(\bx_N,y_N)\}$ and a test point $\bx_{N+1}$, how do you make a prediction using this model?
+    
+    
+    \item Suppose that the test point $\bx_{N+1}$ is an outlier, e.g. assume $\min_{1 \leq i \leq N} \norm{\bx_{N+1} - \bx_i} > 1000$. Using your answer in part (B), what is your prediction for $\bx_{N+1}$?
+    
+    
+    \item Now, imagine you fit a flexible neural network $f_{\theta}$ on the same dataset $\mathcal{D}$. Consider the same outlier $\bx_{N+1}$ as in part (C). What can you say about the prediction $f_\theta(\bx_{N+1})$? Does your answer change depending on your choice of network $f_{\theta}$? 
+    
+    \textit{Hint: Think about the constraints a neural network may impose on the prediction for $\bx_{N+1}$.}
+    
+    
+    \item Compare the predictions you made in parts (C) and (D). Are they the same? If not, explain the difference. If one has a problem, suggest a way to solve it.
+
+\end{enumerate}
+
+
+\newpage 
+
+
+\section{Neural Networks for Reconstruction}
+
+In class, we saw how neural networks are a flexible model class that can be used for supervised regression or classification tasks, i.e. predicting $y$ from $\bx$. Let us consider a neural network that tries to predict $\bx$ from $\bx$ instead. In other words, given an input $\bx \in \mathbb{R}^D$, the neural network will be trained to reconstruct the same $\bx$.\\
+
+\newcommand{\bV}{\mathbf{V}}
+
+\noindent Let us consider the network's architecture as follows:
+\begin{align*}
+    \bh &= a(\bV \bx)\\
+    \hat{\bx} &= \bW \bh
+\end{align*}
+
+\noindent Here, our network contains a single hidden layer of size $H$, hence $\bV$ is a $H \times D$ matrix and $\bW$ is a $D \times H$ matrix. $a(\cdot)$ is an element-wise non-linear activation function that we will leave undecided for now. We have omitted bias terms to simplify the math.\\
+
+\subsection*{I \quad Gradients}
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Write down the loss function $L$ of our network for a single data point $\bx$, assuming element-wise squared loss. Compute the derivative $\dfrac{\text{d}L}{\text{d}\bh}$. Do not leave any symbolic expressions of the form $\dfrac{dy}{dx}$, i.e. actually compute the derivative in terms of known quantities like $\bW$ or $\bx$.
+    
+    
+    \item Let $v := \bV_{1,1}$ be the element in the first row and first column of $\bV$. Compute the derivative $\dfrac{\text{d}\bh}{\text{d}v}$. You can assume that $\dfrac{\text{d}a(x)}{\text{d}x} = a'(x)$. Next, using the chain rule and your answer in (A), compute the derivative $\dfrac{\text{d}L}{\text{d}v}$. As in (A), do not leave any symbolic expressions of the form $\dfrac{dy}{dx}$.
+    
+\end{enumerate}
+
+\subsection*{II \quad Representation}
+
+\begin{enumerate}[label=(\Alph*)]
+\setcounter{enumi}{2}
+    
+    \item How does our choice of $H$ affect the neural network's performance? Assuming that our optimization procedure successfully finds a network with minimum loss, describe the characteristics of an optimal network in the cases: (i) $H > D$, (ii) $H = D$, and (iii) $H < D$.
+    
+    In each of these cases, is zero loss always possible? If not, why not? If sometimes, give examples of data distributions where zero loss is or is not possible. 
+    
+    
+    \item How does our choice of $a$ affect our neural network's performance? Consider two activation functions: (i) $a(x) = \frac{1}{1 + \e^{-x}}$ (the sigmoid function), and (ii) $a(x) = x$ (the identity function). For the 2D input data described by the plot below, what might the hidden representation $\bh$ look like for each of these activation functions? Why?
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.4\textwidth]{hw2_img.png}
+    \end{figure}
+    
+\end{enumerate}
+
+\newpage
+
+
+\section{Building a Latent Variable Model} 
+
+In this question, you will build a latent variable model by making certain assumptions about your data. Now, you have data about $N$ patients that were treated with a new drug to control their blood cholesterol (BC) level. For each patient $1 \leq i \leq N$ in the dataset, you observe a single scalar change in BC and no other data; let us denote this value as $x_i$. A biologist collaborator tells you that there potentially exists $K$ patient characteristics that affect how BC changes due to drug intake. Since these factors are unmeasured, you build a model with latent variables $z_{i,k}$ that indicate the presence of characteristic $k$ for patient $i$.\\
+
+\noindent Denote the characteristic vector for patient $i$ as $\bz_i = [z_{i,1}, \cdots ,z_{i, K}]$ where $z_{i,k} \in \{0, 1\}$ (i.e. assume that the latent variables are binary). Furthermore, assume that $(x_i, \bz_i) \indep (x_j, \bz_j)$ for $i\not=j$.
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item  Choose a prior distribution for the characteristic vectors $\bz_i \sim p(\bz)$ and justify your choice, i.e. describe the assumptions that you made.
+    
+    
+    \item The biologist tells you that given any patient's characteristics $\bz_i$, the observed BC can be modeled as:
+        \begin{align*}
+            v_{i, k} &\sim \cN(\mu_k, 1), \qquad \epsilon_i\sim \cN(0,1), \quad 
+            x_i =  \sum_{k=1}^K z_{i, k} v_{i,k} + \epsilon_i
+        \end{align*}
+    where $\{\mu_k\}_{1 \leq k \leq K}$ are known quantities. Write down the the likelihood distribution $p(x_i \mid \bz_i)$ explicitly.
+    
+    
+    \item Under your choice of prior in part (A) and the likelihood specified by the biologist in part (B), write down the implied marginal distribution $p(x_i)$ in terms of known quantities like $\{\mu_k\}_{1 \leq k \leq K}$. How many modes can this distribution have?
+    
+    
+    \item How would you infer $\bz_i$ for any patient $i$? Write down one way to do it in terms of observed data $\{x_i\}_{1 \leq i\leq N}$ and known quantities $\{\mu_k\}_{1 \leq k\leq K}$.
+    
+    
+    \item Now consider a different likelihood model than in (B). Instead of giving you exact values, suppose that the biologist now tells you a range for each $\mu_k$ in $\{\mu_k\}_{1 \leq k\leq K}$. What prior would you place on these means and why?
+    
+    
+    \item Now consider yet another likelihood model, where we let each possible value of $\bz_i$ parameterize the likelihood with a separate mean $\mu_{\bz_i}=\E[x_i|\bz_i]$? What are the trade-offs of this model compared to our original one in (B)? For example, what happens when $K$ is large?
+
+\end{enumerate} 
+
+\newpage
+
+\section{Bias-Variance Tradeoff and Regularization} 
+
+In this question, you will study the bias and variance of the linear regression estimator with and without $\ell_2$ regularization. 
+The input points $\bx_i$ are $P$ dimensional and are sampled i.i.d. from $\cN(0,I_P)$. 
+The targets are given by $y_i = \bx_i^T \boldsymbol{\theta}^* + \epsilon_i$ where the noise $\epsilon_i$ are sampled from $\cN(0, \sigma^2)$. 
+We have access to $N=P+1$ data points. 
+
+\begin{enumerate}[label=(\Alph*)]
+
+\item We are given an estimator $\boldsymbol \theta$. 
+Express the \textit{risk} $R(\boldsymbol{\theta}) = \mathbb{E}_{\bx \sim \cN(0, I_P), \ y|\bx \sim \cN(\bx^T \boldsymbol{\theta}^*, \sigma^2)}[ (\bx^T \boldsymbol{\theta}- y)^2]$ in terms of 
+bias and variance of the estimator and the noise terms. Indicate what each term corresponds to. 
+
+\item Use a ridge parameter $\lambda \geq 0$, i.e. the coefficient of $\ell_2$ regularization. 
+Express the estimator $\boldsymbol \theta$ learned with ridge regression in terms of the data matrix $ X = [\bx_1, ..., \bx_N] \in \mathbb{R}^{P \times N}$, 
+the noise vector $E = [\epsilon_1, ..., \epsilon_N] \in \mathbb{R}^N$, the true parameter $\boldsymbol{\theta}^*$, and the ridge $\lambda$. 
+
+\item Give the formulae of the bias $\mathbb{E}_{X, E}[\boldsymbol{\theta}] - \boldsymbol{\theta}^* $ and 
+variance $\mathbb{E}_{X, E}[\boldsymbol{\theta}^2] - \mathbb{E}_{X, E}[\boldsymbol{\theta}]^2$ of the rigde regression estimator $\boldsymbol{\theta}$. 
+The formulae should be expressed in terms of the ridge $\lambda$ and as an expectation over $X$.
+
+\item Set $\lambda=0$. In this ridgeless case, is the estimator unbiased? Express the variance in terms of the eigenvalues 
+of the matrix $ (X X^T) $ and comment on its behavior when the number of features is large. 
+
+\textit{Hint: Marchenko-Pastur distribution describes the eigenvalues of $ X X^T$ when $P$ is large. 
+Commenting on the behavior of the minimum eigenvalue will suffice to explain the behavior of the variance.}
+
+\item To mitigate the large variance, we want to use a non-zero ridge. In this ridge case, is the estimator unbiased? 
+Use the formulae of the variance to explain how the ridge parameter mitigates the large variance. 
+
+
+
+\end{enumerate}
+
+
+\newpage
+
+\section{Neural Networks and Overparameterization}
+
+In class, we learned that having more parameters than needed to perfectly learn a training dataset $(\bx_i, y_i)$ for $i=1,...,N$ 
+facilitates the optimization problem. 
+Consider the dataset $(\bx_1=(-1,1), y_1=0), (\bx_2=(1,-1), y_2=0), (\bx_3=(1,1), y_3=1), (\bx_4=(-1,-1), y_4=1)$.
+
+\begin{enumerate}[label=(\Alph*)]
+
+\item Construct parameters of a neural network with two neurons and ReLU link function 
+$\bx \to \max(\boldsymbol{\theta}_1^T \bx + b_1, 0) + \max(\boldsymbol{\theta}_2^T \bx + b_2, 0)$ 
+that achieves perfect accuracy on the training data. 
+You can either write out the parameters $ (\boldsymbol{\theta}_i, b_i)$ explicitly, or draw the hyperplanes $ \boldsymbol{\theta}_i^T \bx + b_i = 0$ corresponding to each neuron in the input space. 
+Explain how your neural network achieves perfect accuracy. 
+
+\end{enumerate}
+
+\noindent 
+Use parameters you constructed in (A) to generate new parameters in the overparameterized neural network with $ H \geq 2 $ neurons
+by splitting neurons 
+\[
+    \max(\boldsymbol{\theta}_i^T \bx + b_i, 0) \to  \max(\alpha \boldsymbol{\theta}_i^T \bx + \alpha b_i, 0)  + \max((1-\alpha) \boldsymbol{\theta}_i^T \bx + (1-\alpha) b_i, 0)
+\]
+for some $\alpha \in [0, 1]$. The new parameter vector after neuron splitting generates the same neural network function. 
+
+\noindent 
+Substitute parameters of each one of $H$ neurons by using either one of the two neurons' parameters. 
+Consider fixed $\alpha$'s after splitting neurons.
+
+\begin{enumerate}[label=(\Alph*), start=2] 
+
+\item How many such parameter vectors are there? The collection of neural network parameters is a $3 H$ dimensional vector. 
+How does the number of the parameter vectors scale compare to the number of the parameters when $H$ is large? 
+
+\item Using your answer in part (B), compare the cases of no overparameterization ($H=2$) vs infinite overparameterization ($H \to \infty$) and  
+comment on how overparameterization facilitates the optimization problem. 
+
+\end{enumerate}
+
+
+
+\end{document}
+
+
