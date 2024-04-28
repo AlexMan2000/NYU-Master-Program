@@ -1,0 +1,79 @@
+\documentclass[12pt,twoside]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,graphicx,amsmath,amsfonts,amscd,amssymb,bm,cite,epsfig,epsf,url}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{amsthm,multirow,wasysym,appendix}
+\usepackage{array,subcaption} 
+% \usepackage[small,bf]{caption}
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usetikzlibrary{spy}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows,automata}
+\usepackage{thmtools}
+\usepackage{blkarray} 
+\usepackage{textcomp}
+\usepackage[left=0.8in,right=1.0in,top=1.0in,bottom=1.0in]{geometry}
+
+\input{macros}
+
+\begin{document}
+
+\begin{center}
+{\large{\textbf{Homework 4}} } \vspace{0.2cm}\\
+Due Feb 26 at 11 pm
+\\
+\end{center}
+\input{hwstatement.tex}\\
+
+\begin{enumerate}
+
+
+\item (Watering a plant)
+Two absentminded roommates share a plant. On any given day, the first one gives the plant an amount of water that is uniformly distributed between 0 and 1 liter. The second one gives the plant an amount of water that is uniformly distributed between 0 and 2 liters, independently from the first. Derive the pdf of the water received by the plant each day and plot it.
+
+\item (Choosing a sample size)
+Suppose perfect pitch (the ability to identify a musical note without the need for a reference tone) appears in 1\% of a certain population.   Assume the population is effectively infinite, allowing us to model the sampling process as being with replacement. 
+\begin{enumerate}
+\item How large must a sample be if the probability of its containing a person with perfect pitch is to be 0.95 or more? 
+\item More generally, provide a function $n(p)$ for determining how large the sample must be, replacing the specific prevalence of 1\% with a generic $p$, which represents the prevalence of some condition of interest in a certain population. 
+\end{enumerate}
+
+
+
+\item (Confidence intervals) The following are $1-\alpha$ confidence intervals for a certain quantity $\mu$, estimated using the sample mean of the observed data. \vspace{0.2cm}\\
+\begin{tabular}{>{\centering\arraybackslash}m{0.05\linewidth} >{\centering\arraybackslash}m{0.9\linewidth} }
+ A  &
+  \includegraphics[width=0.7\linewidth]{./hw4/figs/confidence_intervals_exam_20}   \\
+  B &
+  \includegraphics[width=0.7\linewidth]{./hw4/figs/confidence_intervals_exam_500} 
+\end{tabular}
+\begin{enumerate}
+\item Estimate $\alpha$.
+\item In each scenario choose whether you think $X=A$ and $Y=B$, or $X=B$ and $Y=A$. \begin{itemize}
+\item In plot X the confidence intervals are based on the central limit theorem. In plot Y they are built using Chebyshev's inequality (everything else is the same).
+\item In plot X the confidence intervals are built using more data than in plot Y (everything else is the same).
+\item In plot X the data are sampled from a distribution that has higher variance than plot Y (everything else is the same).
+\end{itemize}
+\end{enumerate}
+
+\item (Cholesterol) We want to determine whether men have higher cholesterol than women in a certain population. We pick $200$ men and $100$ women independently at random with replacement from the population and compute their average cholesterol levels.  
+
+\begin{enumerate}
+\item Let $\sigma_{\text{men}}$ and $\sigma_{\text{women}}$ denote the standard deviations of the cholesterol level for the men and women in the population respectively. What is the standard error of the difference between the average cholesterol levels computed from our data?
+\item The average cholesterol levels we observe are 200 for the men and 180 for the women. Assuming $\sigma_{\text{men}} = \sigma_{\text{women}}=10$, compute a 95\% confidence interval for the difference between the mean cholesterol level for men and women in the population using the central limit theorem. %(Use the fact that $\Phi(1.95)=0.025$, where $\Phi$ is the cdf of a standard Gaussian.) 
+\end{enumerate}
+
+\item (Blood pressure cont. HW3)
+The table in \texttt{cardio.csv} records the systolic blood pressure (\textit{``ap\_hi"}) of a cohort of patients. In HW3, we compared the Chebyshev bound with the probability that \textit{ap\_hi} deviates from the corresponding population mean via Monte Carlo simulations.
+
+\begin{enumerate}
+    \item  Try to use the central limit theorem to approximate the probability. Plot the new approximation in the same plot as HW3 Q4.
+    \item Compute approximate $1-\alpha$ confidence intervals of the sample mean for 50 batches of $n$ samples for $n \in \keys{50, 100}$ and $\alpha \in \keys{0.05, 0.1, 0.5}$. For each $n$ and $\alpha$, plot the confidence intervals together with the population mean of the full dataset and count the number of times that the population mean does not fall in the confidence interval. How do the values of $n$ and $\alpha$ influence (1) the length of the intervals and (2) the probability that the population mean belongs to the interval?
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

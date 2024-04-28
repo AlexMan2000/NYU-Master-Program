@@ -1,0 +1,239 @@
+\documentclass[11pt]{article}
+
+\input{packages}
+\input{math}
+
+\newif\ifshow
+\showtrue 
+\ifshow
+\newenvironment{solution}{\proof[Solution]\color{blue}}{\endproof} 
+
+\else
+\excludecomment{solution}
+\fi
+
+\begin{document}
+
+
+\title{DS-GA 1003 Machine Learning: Homework 3 \\
+\textbf{\large{Due 11.59 p.m. EST, April 25, 2024 on Gradescope}}}
+\author{{\color{blue}(fill in your name here)}\\
+    {\color{blue}(collaborators if any)}}
+\date{}
+\maketitle
+
+\noindent \textbf{We encourage \LaTeX-typeset submissions but will accept quality scans of hand-written pages.}
+
+\section{Variational Inference and Monte Carlo Gradients}
+
+In this question, we will review the details of variational inference (VI), in particular, we will implement the gradient estimators that make VI tractable.\\  
+
+\noindent We consider the latent variable model $p(\bz, \bx) = \prod_{i=1}^N p(\bx_i|\bz_i)p(\bz_i)$ where $\bx_i,\bz_i \in \mathbb{R}^D$. Recall that in VI, we find an approximation  $q_\lambda(\bz)$ to $p(\bz | \bx)$. 
+
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Let $V_1(\lambda)$ be the set of variational approximations $\{q_\lambda: q_{\lambda}(\mathbf{z}) = \prod_{i=1}^N 
+    q(\bz_i; \lambda_i)\}$ where $\lambda_i$ are parameters learned for each datapoint $\bx_i$. Now consider $f_\lambda(\bx)$ as a deep neural network with \textit{fixed} architecture where $\lambda$ parametrizes the network. Let $V_2(\lambda)= \{q_\lambda : q_\lambda(\bz) = \prod_i^N q(\bz_i; f_\lambda(\bx_i))\}$. 
+    Which of the two families ($V_1$ or $V_2$) is more expressive, i.e. approximates a larger set of distributions? \textbf{Prove} your answer. 
+    
+    Will your answer change if we let $f_\lambda$ represent \textit{variable} architecture, e.g. if $\lambda$ parametrizes the set of multi-layered perceptrons of all sizes? Why or why not?   
+
+        \begin{solution}
+           Write your solution for each question using the \texttt{solution} environment. Feel free to use style packages to your convenience, e.g. \hl{highlighting parts of your solution that you still need to work on.}
+        \end{solution}
+        
+    \item For variational inference to work, we need to compute unbiased estimates of the gradient of the ELBO. In class, we learnt two such estimators: score function (REINFORCE) and pathwise (reparametrization) gradients. Let us see this in practice for a simpler inference problem.
+        
+    Consider the dataset of $N=100$ one-dimensional data points $\{x_i\}^N_{i=1}$ in \texttt{data.csv}. Suppose we want to minimize the following expectation with respect to a parameter $\mu$:
+        \begin{align}\label{eqn:sfg}
+            \min_\mu \mathop{\mathbb{E}}_{z\sim \mathcal{N}(\mu,1)} \left[ \sum^N_{i=1} (x_i - z)^2 \right]  
+        \end{align}
+            
+    \begin{enumerate}[label=(\roman*)]
+        
+        \item Write down the score function gradient for this problem. Using a suitable reparametrization, write down the reparameterization gradient for this problem. 
+        
+        \item Using PyTorch and for each of these two gradient estimators, perform gradient descent using $M=\{1,10,100,1000\}$ gradient samples for $T=10$ trials. Plot the mean and variance of the final estimate for $\mu$ for each value of $M$ across the $T$ trials.
+        
+        \textit{You should have two graphs, one for each gradient estimator. Each of the graph should contain two plots, one for the means and one for the variances. The $x$-axis should be $M$, hence each of these plots will have four points.}
+        
+    \end{enumerate}
+    
+    \item  What conditions do you require on $p(z)$ and $f(z)$ ($f(z)=\sum^N_{i=1} (x_i - z)^2$ in this case) for each of the two gradient estimators to be valid? Do these apply to both continuous and discrete distributions $p(z)$? 
+
+\end{enumerate} 
+
+
+
+\newpage
+
+\section{Normalizing Flows}
+
+In this question, we will review how we can use invertible transformations and the change-of-variables formula to turn simple distributions into complex ones. Such transformations are known as \textit{normalizing flows}. One reason that flows are useful is that they can map unimodal distributions into multimodal ones, while still allowing for a tractable density.
+
+\begin{enumerate}[label=(\Alph*)]
+    \item Let $z_0 \sim \mathcal{N}(0,1)$. Produce a density plot of $z_0$ using $N=1000$ samples.
+    
+    Now look up ``Planar Flow" (Equation 4) of \href{https://arxiv.org/pdf/2006.00392.pdf}{The Expressive Power of a Class of Normalizing Flow Models}. Denote this flow as $f$. Choose an invertible non-linearity $h$ and find values of $w,b,u$ such that $f(z_0)$ is a multimodal distribution. Plot the density plot of $f(z_0)$ using the same $N=1000$ samples as above.
+    
+    \textit{Note that $d=1$ in this question. Also, it is fine to choose a $h$ that is only invertible on its output range, e.g. the sigmoid function on $(0,1)$.}
+
+    \item Use the change-of-variables formula and write down an explicit expression for the density of $f(z_0)$. This depends on your choice of $h$.
+
+
+    \item Let's generalize this to $D$-dimensional variables and to a sequence of invertible functions $f$ (not necessarily planar flows). We can sample $\bz^{(0)} \sim  \mathcal{N}(\mathbf{0}, I)$ and then transform that sample iteratively using a sequence of invertible functions, $f_1, \dots, f_K$, to finally obtain a sample $\bz^{(K)}$ where
+     \begin{align*}
+        \bz^{(K)} &= f_K \circ \dots \circ f_2 \circ f_1(\bz^{(0)}).
+     \end{align*}
+    Using the change-of-variables formula, write down a formula for the log-density of $\bz^{(K)}$ using the functions $\{f_k\}^K_{k=1}$, their inverses and Jacobians, as well as the log-density of $\bz^{(0)}$.
+
+
+    \item Let us consider how we can improve variational inference using flows.
+     \begin{enumerate}[label=(\roman*)]
+        \item How can we define an approximation $q_\lambda(\bz)$ to $p(\bz|\bx)$ using flows?
+        \item How do we train the model, i.e. optimize $\lambda$ to yield a good approximation to $p(\bz|\bx)$?
+        \item In what way is this more flexible than using a Gaussian approximation for $q_\lambda(\bz)$?
+     \end{enumerate}
+
+\end{enumerate}
+
+\newpage
+
+\section{Diffusion Models and Denoising Score Matching}
+In class, we learned about the ELBO for diffusions. Part of this ELBO included a term that ``matched the score,'' which in a simplified form %for a scalar 
+yields a loss called denoising score matching:
+\begin{align*}
+    {\cal L}_{\text{dsm}}(\theta) = \int_{\epsilon}^1 E_{q(z_0, z_t)} (s_{\theta}(z_t, t) - \nabla_{z_t} \log q (z_t \,|\, z_0))^2dt
+\end{align*}
+\begin{enumerate}[label=(\Alph*)]
+    \item In terms of $q$, what is the optimal $s_\theta(z_t, t)$?
+
+
+    \item What is the value of the loss at optimality?
+
+
+    \noindent Imagine 
+    \begin{itemize}
+        \item $z_0 \sim \frac{1}{2}\textrm{Normal}(-10, 1) + \frac{1}{2}\textrm{Normal}(10, 1)$
+        \item $dz_t = -\frac{1}{2}z_t + dW_t$
+    \end{itemize}
+    where $W_t$ is the Brownian motion. 
+    For this process the transition $q(z_t | z_0) = \text{Normal}(\exp(-0.5 t)z_0, 1 - \exp(-t))$.
+
+    \item Plot the distribution of $z_t$ numerically with simulation. 
+
+    \item For this example, compute the optimal $s_\theta(z_t, t)$.
+
+    \item What values of $t$ contribute more to the overall optimal loss?
+   
+    \item What does this question tell you about training a diffusion model?
+\end{enumerate}
+
+\newpage 
+
+\section{Causal Inference: Doubly Robust Estimators}
+
+Denote unit $i$'s treatment, outcome, and its vector of covariates by $T_i$, $Y_i$, and $X_i$. Let us model propensity scores by $e(x;\hat\theta)$ and the outcome by $f(x;\hat{\psi})$. Assume strong ignorability and positivity hold. We define the Doubly Robust Estimator (DRE) for the average outcome when treated, $\E[Y^{(1)}]$, by:
+\begin{align}
+    \frac{1}{n}\sum_{i=1}^n \left[\frac{T_iY_i}{e(X_i;\hat\theta)} - \frac{T_i - e(X_i;\hat\theta)}{e(X_i;\hat\theta)}f(X_i;\hat{\psi})\right]
+\end{align}
+\begin{enumerate}[label=(\Alph*)]
+
+    \item Suppose the propensity model is correctly specified, i.e. $e(x;\hat\theta) = P(T_i=1|X_i=x)$. Given any function $f$, show that the DRE is unbiased.
+
+
+    \item Suppose the model $f(x;\hat\psi)$ is correctly specified, i.e. $f(x;\hat\psi) = \E[Y_i^{(1)}|X_i=x] := \E[Y_i|X_i=x,T=1]$. Given any function $e$ taking values in $(0,1)$, show that the DRE is unbiased.
+
+
+    \item Recall that control variates improve Monte Carlo estimators by defining a new estimator with the same expectation but lower variance. For some estimator $f$, this is done by taking a function $g$ with $\E[g(x)] = 0$, and defining the new estimator as $\hat{f}(x)=f(x) - ag(x)$ for some $a \in \mathbb{R}$. Here $\E[\hat{f}] =\E[f]$, but the variances are not equal. The value of $a$ that makes the variance of $\hat{f}$ smallest is $a^* = \frac{Cov(f,g)}{Var(g)}$.
+
+    When both $e(x;\hat\theta)$ and $f(x;\hat\psi)$ are correctly specified, use control variates to justify the use of Doubly Robust Estimators.
+
+\end{enumerate}
+
+\newpage 
+
+\section{Effect of Confounders}
+
+\noindent In this question, you will simulate a patient database to determine whether to give Treatment A or Treatment B. 
+For every patient $i$, $Z_i$ is the level of sickness and is sampled from a Gaussian $\mathcal{N}(1, 1)$. 
+A positive $Z_i$ indicates sickness, whereas a negative $Z_i$ indicates health. 
+The patient's willingness to take risks, $R_i$, is sampled from $\mathcal{N}(0, 0.5)$.
+A positive $R_i$ indicates the openness to taking risk, whereas a negative value suggests caution. 
+The probability of giving Treatment A or Treatment B is given by 
+\begin{align*}
+    \mathbb{P}(T = A) &= \sigma(Z + R - 0.5) \\ 
+    \mathbb{P}(T = B) &= 1- \sigma(Z + R - 0.5)
+\end{align*}
+where $\sigma(t) = 1/(1+e^{-t})$ is the sigmoidal logistic function. \newline
+
+\noindent Treatment A, on average, more effectively reduces sickness levels compared to Treatment B but has a small risk of causing harm. 
+The recovery probability is given by
+\begin{align*}
+    \mathbb{P}(H = 1) &= 1-\sigma(Z - E_A \mathbb{I}(T = A) - E_B \mathbb{I}(T = B)) \\
+    \mathbb{P}(H = 0) &= \sigma(Z - E_A \mathbb{I}(T = A) - E_B \mathbb{I}(T = B))
+\end{align*}
+with $E_A \sim \mathcal{N}(1.5, 1)$ and $E_B = 0.5$. 
+
+\begin{enumerate}[label=(\Alph*)]
+    \item Draw the causal graphical model for the described patient database. 
+
+    \item Simulate $N=1000$ patients numerically.
+    Given only the data on administered treatments and recovery outcomes, organize the findings 
+    into a $2 \times 2$ table for the combinations of $\{T=A, T=B\} \times \{H=0, H=1\}$. Estimate  
+    the Average Treatment Effect (ATE) and recommend a treatment based on the ATE.
+    Is this an informed recommendation? Why or why not?
+
+    \item In this part, you have also access to the level of sickness of the patients. 
+    Describe how you use this information to refine the ATE estimate and report this estimate. 
+    Does it change the your recommendation compared to part (B)? Why or why not?
+\end{enumerate} 
+
+
+\newpage
+
+\section{Reinforcement Learning with Sparse Rewards}
+
+\noindent Suppose that you have a robot that should learn to move from any of a set of starting positions $s_0 \in \mathcal{S}_0$ to a goal position $G$. The robot can move by performing a sequence of small, low-level continuous actions, such as rotating its joints. However, you do not know how to explicitly program a sequence of actions that will move the robot from any $s_0$ to $G$. You decide to use a reinforcement learning algorithm. Your RL algorithm uses the policy gradient to learn a policy $\pi_\theta(a|s)$ that maps from states $s$ to distributions over actions $a$. You consider learning episodes of a finite number of $T$ steps.
+
+
+\begin{enumerate}[label=(\Alph*)]
+    \item You start by designing the Markov Decision Process (MDP) that defines the robot's learning environment. The robot receives reward $R=1000$ when it reaches location $G$ and $R=0$ upon entering any other position. What is the Monte Carlo estimate of the policy gradient when $G$ is not reached in $T$ steps in any of the sample trajectories? What happens as the robot explores in this environment and what will its learning process look like?
+
+    \item Suppose the robot must start in $s_0$ for all learning trajectories. Name two ways you could alter the MDP environment to improve exploration and gradients.
+    
+
+\end{enumerate}
+
+\newpage
+
+\section{Self-Attention Layer and Embeddings}
+
+\noindent You are given a large text corpus from web in the format of a sequence of discrete tokens $(x_1, ..., x_N)$. 
+In this question, you will build a self-attention block of a large language model and explore its mechanism. 
+
+\begin{enumerate}[label=(\Alph*)]
+    \item Collect the input sequence in a data matrix $X = [x_1, ..., x_N] \in \mathbb{R}^{d \times N} $. 
+    Your want to map tokens from a symbolic space to a vector space using linear maps.
+    Define the query matrix as $ Q = W^Q X \in \mathbb{R}^{k \times N} $ and the key matrix as $ K = W^K X \in \mathbb{R}^{k \times N} $ 
+    where $ W^Q, W^K $ are $k \times d$ matrices of learnable weights. 
+    Write out the expression for the attention weights $a_{nm} \in [0,1]$ using $Q_n$ (the $n$-th column of $Q$)
+    and $K_{m'}$ (the $m'$-th column of $K$). 
+
+    \item The value matrix $ V = W^V X \in \mathbb{R}^{k' \times N} $ is constructed similarly, where $ W^V $ is a $k' \times d$ matrix. 
+    Write out the output of the attention module in terms of $ a_{nm} $ and $ V_{m} $.  
+
+    \item Consider that the query and key matrices are identical ($Q=K$). 
+    For a large embedding dimension, i.e. $k \gg d$, assume that embedding vectors are nearly orthonormal
+    \[
+        \| Q_n \| = 1 \quad Q_n^T Q_{n'} = \delta 
+    \]
+    with some small $\delta$. Describe the attention weights under these conditions. 
+    What would be the role of this attention module in a large network? What is missing?
+   
+    \item Consider that $\| Q_n \|=1$ and embeddings of similar tokens have a large dot product ($Q_n^T Q_{n'}=1-\epsilon$).
+    Describe in words the corresponding attention weights. What would be the role of this attention module in a large network? What is missing?  
+    
+\end{enumerate}
+
+\end{document} 

@@ -1,0 +1,52 @@
+\documentclass[12pt,twoside]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,graphicx,amsmath,amsfonts,amscd,amssymb,bm,cite,epsfig,epsf,url}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{amsthm,multirow,wasysym,appendix}
+\usepackage{array,subcaption} 
+% \usepackage[small,bf]{caption}
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usetikzlibrary{spy}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows,automata}
+\usepackage{thmtools}
+\usepackage{blkarray} 
+\usepackage{textcomp}
+\usepackage[left=0.8in,right=1.0in,top=1.0in,bottom=1.0in]{geometry}
+
+\input{macros}
+
+\begin{document}
+
+\begin{center}
+{\large{\textbf{Homework 5}} } \vspace{0.2cm}\\
+Due  March 3 at 11 pm
+\\
+\end{center}
+\input{hwstatement.tex}\\
+
+\begin{enumerate}
+
+
+\item (Modified bootstrap Gaussian confidence interval)
+\begin{enumerate}
+\item Explain how to modify the bootstrap Gaussian confidence interval for the correlation coefficient using Fisher's transformation. 
+\item 
+Apply your method on the correlation between \textit{footlength} and \textit{stature} in \texttt{ANSUR\ II\ MALE\ Public.csv} to compute 0.95 confidence intervals from $n$ samples. Plot them along with non-modified 0.95 bootstrap Gaussian confidence intervals and also with the population correlation coefficient.  You can try different sample sizes $n \in \{25, 100 \}$.
+\item Estimate and report the probability that the population correlation belongs to each type of confidence interval. 
+\end{enumerate}
+
+\item (Confidence intervals for the variance) 
+\begin{enumerate}
+\item Explain how to build a $1-\alpha$ bootstrap Gaussian confidence intervals for the population variance from $n$ data points.
+\item Explain how to build a $1-\alpha$ bootstrap percentile confidence intervals for the population variance from $n$ data points.
+\item Build 0.95 bootstrap Gaussian and percentile confidence intervals for the population variance of \textit{stature} in \texttt{ANSUR\ II\ MALE\ Public.csv} setting $n=100$. Plot the confidence intervals along with the true population variance. 
+\item Estimate and report the probability that the population variance belongs to each type of confidence interval.
+
+\end{enumerate}
+
+\end{enumerate}
+\end{document}
